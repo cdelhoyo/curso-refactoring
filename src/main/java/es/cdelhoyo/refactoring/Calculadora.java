@@ -50,15 +50,10 @@ public class Calculadora {
         double precioTotal = 0.0;
         for (Producto p: productos2){
             double precioDelProductoConRebaja = p.getPrecio() * p.getRebaja();
-            double decuentoDeEdad = 1;
-            if(comprador.getEdad()>65 && p.getTipo().equals("transporte")){
-                decuentoDeEdad = 0.8;
-            }else if(comprador.getEdad()<35 && p.getTipo().equals("vivienda")){
-                decuentoDeEdad = 0.8;
-            }
+            double decuentoDeEdad = calcularDecuentoDeEdad(comprador, p);
             double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
-            double precioAñadidoPorIVA = 0.0;
-            if(p.getTipo().equals("comida")){ // Añadimos precio de la comida
+            double precioAñadidoPorIVA;
+            if(p.getTipo().equals("comida")){
                 precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.06; // Añadimos IVA del 6% por tipo comida
             }else if(p.getTipo().equals("drogueria")){
                 precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.09; // Añadimos IVA del 9% por tipo drogueria
@@ -73,6 +68,16 @@ public class Calculadora {
             precioTotal+=precioTotalDelProducto;
         }
         return redondearADosDecimales(precioTotal);
+    }
+
+    private double calcularDecuentoDeEdad(Comprador comprador, Producto p) {
+        double decuentoDeEdad = 1;
+        if(comprador.getEdad()>65 && p.getTipo().equals("transporte")){
+            decuentoDeEdad = 0.8;
+        }else if(comprador.getEdad()<35 && p.getTipo().equals("vivienda")){
+            decuentoDeEdad = 0.8;
+        }
+        return decuentoDeEdad;
     }
 
     private double redondearADosDecimales(double result) {
