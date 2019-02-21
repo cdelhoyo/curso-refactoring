@@ -19,12 +19,15 @@ public class Calculadora {
     }
 
     private double calcularPrecioFinalDeTodasLasUnidadesDelProducto(Comprador comprador, Producto producto, Long cantidad) {
-        double precioDelProductoConRebaja = producto.getPrecio() * producto.getRebaja() * cantidad;
+        double precioDelProductoConRebaja = producto.getPrecio() * producto.getRebaja();
+        double precioDeTodosLosProductoConRebaja = precioDelProductoConRebaja * cantidad;
+        double rebajaPorMitadDePrecio = producto.getSegundoAMitadDePrecio() ? Math.floor(cantidad/2) * 0.5 * precioDelProductoConRebaja : 0;
+        double precioDeLosProductoConRebajaYSegundoAMitadDePrecio = precioDeTodosLosProductoConRebaja - rebajaPorMitadDePrecio;
         double decuentoDeEdad = calcularDecuentoDeEdad(comprador, producto);
-        double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
-        double porcentajeDeIVAPorIVA = calcularPorcentajeDeIVAPorIVA(producto);
-        double precioAñadidoPorIVA = precioDelProductoConRebaja * porcentajeDeIVAPorIVA;
-        return precioDelProductoConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
+        double precioDeLosProductosConRebajaYDescuentoDeEdad = precioDeLosProductoConRebajaYSegundoAMitadDePrecio * decuentoDeEdad;
+        double porcentajeDeIVAPorTipoDeProducto = calcularPorcentajeDeIVAPorIVA(producto);
+        double precioAñadidoPorIVA = precioDeLosProductoConRebajaYSegundoAMitadDePrecio * porcentajeDeIVAPorTipoDeProducto;
+        return precioDeLosProductosConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
     }
 
     private double calcularPorcentajeDeIVAPorIVA(Producto producto) {
