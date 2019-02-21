@@ -76,6 +76,10 @@ public class Calculadora {
                 result += p.getPrecio() * p.getRebaja() *.21; // Añadimos IVA del 21% por tipo general
             }
         }
+        return redondearADosDecimales(result);
+    }
+
+    private double redondearADosDecimales(double result) {
         BigDecimal bd = new BigDecimal(result);
         bd = bd.setScale(2, RoundingMode.HALF_UP); // Redondeamos a dos decimales
         return bd.doubleValue();
