@@ -5,11 +5,11 @@ import java.util.Objects;
 public class Producto {
     private String nombre;
     private double precio;
-    private String tipo;
+    private TipoProducto tipo;
     private double rebaja; // Entre 0 y 1 (en porcentaje)
     private boolean segundoAMitadDePrecio; // Todas los productos con el mismo nombre tendran este boolean igual
 
-    public Producto(String nombre, double precio, String tipo, double rebaja, boolean segundoAMitadDePrecio) {
+    public Producto(String nombre, double precio, TipoProducto tipo, double rebaja, boolean segundoAMitadDePrecio) {
         this.nombre = nombre;
         this.precio = precio;
         this.tipo = tipo;
@@ -33,11 +33,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public String getTipo() {
+    public TipoProducto getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoProducto tipo) {
         this.tipo = tipo;
     }
 

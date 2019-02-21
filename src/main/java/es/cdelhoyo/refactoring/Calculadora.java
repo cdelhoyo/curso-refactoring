@@ -2,8 +2,6 @@ package es.cdelhoyo.refactoring;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,37 +21,11 @@ public class Calculadora {
         double precioDeTodosLosProductoConRebaja = precioDelProductoConRebaja * cantidad;
         double rebajaPorMitadDePrecio = producto.getSegundoAMitadDePrecio() ? Math.floor(cantidad/2) * 0.5 * precioDelProductoConRebaja : 0;
         double precioDeLosProductoConRebajaYSegundoAMitadDePrecio = precioDeTodosLosProductoConRebaja - rebajaPorMitadDePrecio;
-        double decuentoDeEdad = calcularDecuentoDeEdad(comprador, producto);
+        GrupoEdad grupoDeEdadDelComprador = GrupoEdad.getGrupoDeEdadPorEdad(comprador.getEdad());
+        double decuentoDeEdad = producto.getTipo().getRebajaPorGrupoDeEdad(grupoDeEdadDelComprador);
         double precioDeLosProductosConRebajaYDescuentoDeEdad = precioDeLosProductoConRebajaYSegundoAMitadDePrecio * decuentoDeEdad;
-        double porcentajeDeIVAPorTipoDeProducto = calcularPorcentajeDeIVAPorIVA(producto);
-        double precioAñadidoPorIVA = precioDeLosProductoConRebajaYSegundoAMitadDePrecio * porcentajeDeIVAPorTipoDeProducto;
+        double precioAñadidoPorIVA = precioDeLosProductoConRebajaYSegundoAMitadDePrecio * producto.getTipo().getIva();
         return precioDeLosProductosConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
-    }
-
-    private double calcularPorcentajeDeIVAPorIVA(Producto producto) {
-        double porcentajeDeIVAPorIVA;
-        if(producto.getTipo().equals("comida")){
-            porcentajeDeIVAPorIVA = 0.06;
-        }else if(producto.getTipo().equals("drogueria")){
-            porcentajeDeIVAPorIVA = 0.09;
-        }else if(producto.getTipo().equals("transporte")){
-            porcentajeDeIVAPorIVA = 0.12;
-        }else if(producto.getTipo().equals("vivienda")){
-            porcentajeDeIVAPorIVA = 0.18;
-        }else{
-            porcentajeDeIVAPorIVA =  0.21;
-        }
-        return porcentajeDeIVAPorIVA;
-    }
-
-    private double calcularDecuentoDeEdad(Comprador comprador, Producto producto) {
-        double decuentoDeEdad = 1;
-        if(comprador.getEdad()>65 && producto.getTipo().equals("transporte")){
-            decuentoDeEdad = 0.8;
-        }else if(comprador.getEdad()<35 && producto.getTipo().equals("vivienda")){
-            decuentoDeEdad = 0.8;
-        }
-        return decuentoDeEdad;
     }
 
     private double redondearADosDecimales(double numero) {
