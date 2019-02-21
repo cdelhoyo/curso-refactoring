@@ -48,27 +48,31 @@ public class Calculadora {
         // Esta lista la hemos dejado en productosConElSegundoAMitadDePrecioAplicado
 
         double precioTotal = 0.0;
-        for (Producto p: productosConElSegundoAMitadDePrecioAplicado){
-            double precioDelProductoConRebaja = p.getPrecio() * p.getRebaja();
-            double decuentoDeEdad = calcularDecuentoDeEdad(comprador, p);
-            double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
-            double porcentajeDeIVAPorIVA = calcularPorcentajeDeIVAPorIVA(p);
-            double precioAñadidoPorIVA = precioDelProductoConRebaja * porcentajeDeIVAPorIVA;
-            double precioTotalDelProducto = precioDelProductoConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
+        for (Producto producto: productosConElSegundoAMitadDePrecioAplicado){
+            double precioTotalDelProducto = calcularPrecioTotalDelProducto(comprador, producto);
             precioTotal+=precioTotalDelProducto;
         }
         return redondearADosDecimales(precioTotal);
     }
 
-    private double calcularPorcentajeDeIVAPorIVA(Producto p) {
+    private double calcularPrecioTotalDelProducto(Comprador comprador, Producto producto) {
+        double precioDelProductoConRebaja = producto.getPrecio() * producto.getRebaja();
+        double decuentoDeEdad = calcularDecuentoDeEdad(comprador, producto);
+        double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
+        double porcentajeDeIVAPorIVA = calcularPorcentajeDeIVAPorIVA(producto);
+        double precioAñadidoPorIVA = precioDelProductoConRebaja * porcentajeDeIVAPorIVA;
+        return precioDelProductoConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
+    }
+
+    private double calcularPorcentajeDeIVAPorIVA(Producto producto) {
         double porcentajeDeIVAPorIVA;
-        if(p.getTipo().equals("comida")){
+        if(producto.getTipo().equals("comida")){
             porcentajeDeIVAPorIVA = 0.06;
-        }else if(p.getTipo().equals("drogueria")){
+        }else if(producto.getTipo().equals("drogueria")){
             porcentajeDeIVAPorIVA = 0.09;
-        }else if(p.getTipo().equals("transporte")){
+        }else if(producto.getTipo().equals("transporte")){
             porcentajeDeIVAPorIVA = 0.12;
-        }else if(p.getTipo().equals("vivienda")){
+        }else if(producto.getTipo().equals("vivienda")){
             porcentajeDeIVAPorIVA = 0.18;
         }else{
             porcentajeDeIVAPorIVA =  0.21;
@@ -76,19 +80,19 @@ public class Calculadora {
         return porcentajeDeIVAPorIVA;
     }
 
-    private double calcularDecuentoDeEdad(Comprador comprador, Producto p) {
+    private double calcularDecuentoDeEdad(Comprador comprador, Producto producto) {
         double decuentoDeEdad = 1;
-        if(comprador.getEdad()>65 && p.getTipo().equals("transporte")){
+        if(comprador.getEdad()>65 && producto.getTipo().equals("transporte")){
             decuentoDeEdad = 0.8;
-        }else if(comprador.getEdad()<35 && p.getTipo().equals("vivienda")){
+        }else if(comprador.getEdad()<35 && producto.getTipo().equals("vivienda")){
             decuentoDeEdad = 0.8;
         }
         return decuentoDeEdad;
     }
 
-    private double redondearADosDecimales(double result) {
-        BigDecimal bd = new BigDecimal(result);
-        bd = bd.setScale(2, RoundingMode.HALF_UP); // Redondeamos a dos decimales
+    private double redondearADosDecimales(double numero) {
+        BigDecimal bd = new BigDecimal(numero);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 }
