@@ -28,27 +28,27 @@ public class Calculadora {
             productosMap.put(n, productosConNombre);
         }
 
-        List<Producto> productos2 = new ArrayList(); // productos con el segundo a mitad de precio aplicado
+        List<Producto> productosConElSegundoAMitadDePrecioAplicado = new ArrayList();
         for (List<Producto> productosConNombre: productosMap.values()){
             for(int i=0; i< productosConNombre.size(); i++){
                 Producto p = productosConNombre.get(i);
                 if(i%2==0){ // Un producto que está en posicines pares nunca va a ser el segundo y nunca tendra rebaja de segundo a mitad de precio
-                    productos2.add(p);
+                    productosConElSegundoAMitadDePrecioAplicado.add(p);
                 }else{
                     if(productosConNombre.get(i).getSegundoAMitadDePrecio()){
                         p.setPrecio(p.getPrecio()/2);
                     }
-                    productos2.add(p);
+                    productosConElSegundoAMitadDePrecioAplicado.add(p);
                 }
             }
         }
 
         // En este momento ya tenemos la lista de productos igual que la que entra,
         // pero ya se ha aplicado la rebaja de mitad de precio a los productos que incluian la oferta
-        // Esta lista la hemos dejado en productos2
+        // Esta lista la hemos dejado en productosConElSegundoAMitadDePrecioAplicado
 
         double precioTotal = 0.0;
-        for (Producto p: productos2){
+        for (Producto p: productosConElSegundoAMitadDePrecioAplicado){
             double precioDelProductoConRebaja = p.getPrecio() * p.getRebaja();
             double decuentoDeEdad = calcularDecuentoDeEdad(comprador, p);
             double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
