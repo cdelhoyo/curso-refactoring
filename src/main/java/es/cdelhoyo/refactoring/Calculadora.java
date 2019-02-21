@@ -52,22 +52,28 @@ public class Calculadora {
             double precioDelProductoConRebaja = p.getPrecio() * p.getRebaja();
             double decuentoDeEdad = calcularDecuentoDeEdad(comprador, p);
             double precioDelProductoConRebajaYDescuentoDeEdad = precioDelProductoConRebaja * decuentoDeEdad;
-            double precioAñadidoPorIVA;
-            if(p.getTipo().equals("comida")){
-                precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.06; // Añadimos IVA del 6% por tipo comida
-            }else if(p.getTipo().equals("drogueria")){
-                precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.09; // Añadimos IVA del 9% por tipo drogueria
-            }else if(p.getTipo().equals("transporte")){
-                precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.12; // Añadimos IVA del 12% (la rebaja de jubilado no aplica al IVA)
-            }else if(p.getTipo().equals("vivienda")){
-                precioAñadidoPorIVA = p.getPrecio() * p.getRebaja()*.18; // Añadimos IVA del 18% (la rebaja de joven no aplica al IVA)
-            }else{
-                precioAñadidoPorIVA = p.getPrecio() * p.getRebaja() *.21; // Añadimos IVA del 21% por tipo general
-            }
+            double porcentajeDeIVAPorIVA = calcularPorcentajeDeIVAPorIVA(p);
+            double precioAñadidoPorIVA = precioDelProductoConRebaja * porcentajeDeIVAPorIVA;
             double precioTotalDelProducto = precioDelProductoConRebajaYDescuentoDeEdad + precioAñadidoPorIVA;
             precioTotal+=precioTotalDelProducto;
         }
         return redondearADosDecimales(precioTotal);
+    }
+
+    private double calcularPorcentajeDeIVAPorIVA(Producto p) {
+        double porcentajeDeIVAPorIVA;
+        if(p.getTipo().equals("comida")){
+            porcentajeDeIVAPorIVA = 0.06;
+        }else if(p.getTipo().equals("drogueria")){
+            porcentajeDeIVAPorIVA = 0.09;
+        }else if(p.getTipo().equals("transporte")){
+            porcentajeDeIVAPorIVA = 0.12;
+        }else if(p.getTipo().equals("vivienda")){
+            porcentajeDeIVAPorIVA = 0.18;
+        }else{
+            porcentajeDeIVAPorIVA =  0.21;
+        }
+        return porcentajeDeIVAPorIVA;
     }
 
     private double calcularDecuentoDeEdad(Comprador comprador, Producto p) {
